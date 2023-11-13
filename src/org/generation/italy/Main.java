@@ -83,6 +83,7 @@ public class Main {
 					}
 				}
 			}
+			System.out.println("Sono stati creati questi gruppi:");
 			System.out.println("Gruppo "+ (i+1)+ ": "+ gruppo);
 		}
 		
