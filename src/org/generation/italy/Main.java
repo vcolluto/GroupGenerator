@@ -89,6 +89,7 @@ public class Main {
 		
 		sc.close();
 		System.out.println("Ciao");
+		System.err.println("A tutti");
 	}
 
 }
