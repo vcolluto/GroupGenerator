@@ -34,6 +34,9 @@ public class Main {
 				assenti = sc.nextLine();
 			}	while (assenti.equals("si"));
 		
+		System.out.println("Gli assenti di oggi sono:");
+		for(String assente:listaAssenti)	//per ogni assente in listaAssenti
+			System.out.println(assente);
 		
 		n = r.nextInt(cognomi.length);
 		
