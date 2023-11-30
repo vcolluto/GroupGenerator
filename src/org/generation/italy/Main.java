@@ -1,6 +1,7 @@
 package org.generation.italy;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -16,11 +17,13 @@ public class Main {
 		String [] cognomi = {"Tiberia", "Persico", "Lozzi", "Cuccuru", "Cuomo", "Patitucci", "Tanase",
 				"Di Biase", "Lo Re", "Pagliarini", "Fanasca", "Germani", "Foco", "Pignataro", "Troiani",
 				"Cingolani", "Fanelli", "Farroni", "Turino", "Hubencu", "Franco", "Luzzi", "Ganesio", 
-				"Martinez", "Dascalu", "Sgarlata", "Allegrini", "Barone", "Bellucci", "Mingione", "Trovato"};
+				"Martinez", "Dascalu", "Sgarlata", "Allegrini", "Barone",  "Mingione", "Trovato"};
 		String assenti, cognomeAssente;
 		ArrayList <String> listaAssenti = new ArrayList<>();
+		ArrayList <String> gruppo;
+		ArrayList <ArrayList <String>> elencoGruppi=new ArrayList<>();
 		
-		int gruppi, dimensione, n, conta, personeAggiunte=0;
+		int numeroGruppi, dimensione, n,  personeAggiunte=0, presenti;
 		
 		System.out.println("Ci sono persone assenti? (si/no)");
 		assenti = sc.nextLine();
@@ -38,60 +41,64 @@ public class Main {
 		for(String assente:listaAssenti)	//per ogni assente in listaAssenti
 			System.out.println(assente);
 		
-		n = r.nextInt(cognomi.length);
+		presenti=cognomi.length-assenti.length();
+		System.out.println("Il numero di persone presenti è: "+presenti);
 		
 		System.out.println("Quanti gruppi si devono formare?");
-		gruppi = Integer.parseInt(sc.nextLine());
+		numeroGruppi = Integer.parseInt(sc.nextLine());
 		
-		if (gruppi>cognomi.length)
+		if (numeroGruppi>presenti)
 		{
 			System.out.println("Numero di gruppi non valido");
-			gruppi=31;
+			numeroGruppi=presenti;	//gruppi da 1 persona
 		}
 		
-		dimensione = cognomi.length/gruppi;
+		dimensione = presenti/numeroGruppi;
 		
-		for (int i=0;i<gruppi;i++)
+		for (int i=0;i<numeroGruppi;i++)
 		{
-			ArrayList <String> gruppo = new ArrayList<>();
-			conta=0;
+			gruppo = new ArrayList<>();	
+			elencoGruppi.add(gruppo);
 			
-			while (conta<dimensione)
+			while (gruppo.size()<dimensione)
 			{
 				n = r.nextInt(cognomi.length);
 				if(cognomi[n] != "estratto" && !listaAssenti.contains(cognomi[n]))  // aggiungiamo se il cognome non è stato estratto e non è presente nella lista assenti
 				{
 					gruppo.add(cognomi[n]);
-					cognomi[n]="estratto";
-					conta+=1;
-					personeAggiunte++;
+					cognomi[n]="estratto";					
+					personeAggiunte++;	//totale persone aggiunte
 				}	
 			}
+		}	
+		//se siamo arrivati all'ultimo gruppo e il numero di persone aggiunte
+		//è minore del numero di persone presenti, continuiano ad
+		//aggiungere 	
+		Iterator<ArrayList <String>> gruppiIterator= elencoGruppi.iterator();		//riparto dal primo gruppo
 			
-			//se siamo arrivati all'ultimo gruppo e il numero di persone aggiunte
-			//è minore del numero di persone preseni nell'array, continuiano ad
-			//aggiungere all'ultimo gruppo
-			
-			if (i==gruppi-1)
+		while (personeAggiunte<presenti)
+		{
+			n = r.nextInt(cognomi.length);
+			if (cognomi[n] !="estratto" && !listaAssenti.contains(cognomi[n]))
 			{
-				while (personeAggiunte<cognomi.length)
+				if (gruppiIterator.hasNext()) 
 				{
-					n = r.nextInt(cognomi.length);
-					if (cognomi[n] !="estratto" && !listaAssenti.contains(cognomi[n]))
-					{
-						gruppo.add(cognomi[n]);
-						cognomi[n]="estratto";
-						conta+=1;
-						personeAggiunte++;
-					}
-				}
-			}
-			System.out.println("Sono stati creati questi gruppi:");
-			System.out.println("Gruppo "+ (i+1)+ ": "+ gruppo);
+					gruppo=gruppiIterator.next();	//prossimo gruppo
+					gruppo.add(cognomi[n]);
+					cognomi[n]="estratto";					
+					personeAggiunte++;					
+				}				
+			}			
+			
 		}
-		
+			
+		System.out.println("Sono stati creati questi gruppi:");
+		for(int i=0;i<elencoGruppi.size();i++)
+			System.out.println("Gruppo "+ (i+1)+ ": "+ elencoGruppi.get(i));
 		sc.close();
 		System.out.println("Ciao");
+		}	
+		
 	}
 
-}
+
