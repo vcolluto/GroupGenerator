@@ -41,7 +41,7 @@ public class Main {
 		for(String assente:listaAssenti)	//per ogni assente in listaAssenti
 			System.out.println(assente);
 		
-		presenti=cognomi.length-assenti.length();
+		presenti=cognomi.length-listaAssenti.size();
 		System.out.println("Il numero di persone presenti è: "+presenti);
 		
 		System.out.println("Quanti gruppi si devono formare?");
