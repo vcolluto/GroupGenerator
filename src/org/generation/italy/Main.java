@@ -1,6 +1,10 @@
 package org.generation.italy;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.Scanner;
@@ -25,26 +29,37 @@ public class Main {
 		
 		int numeroGruppi, dimensione, n,  personeAggiunte=0, presenti;
 		
-		System.out.println("Ci sono persone assenti? (si/no)");
+		System.out.print("Ci sono persone assenti? (s/n) ");
 		assenti = sc.nextLine();
-		if (assenti.equals("si"))
+		if (assenti.equalsIgnoreCase("s")) {
+			System.out.println("Scrivere il cognome delle persone assenti (Enter per finire)");
 			do
-			{
-				System.out.println("Scrivere il cognome della persona assente");
+			{				
 				cognomeAssente=sc.nextLine();
-				listaAssenti.add(cognomeAssente);
-				System.out.println("Ci altre persone assenti? (si/no)");
-				assenti = sc.nextLine();
-			}	while (assenti.equals("si"));
+				if (!cognomeAssente.isEmpty())
+					if (Arrays.asList(cognomi).contains(cognomeAssente))
+					{
+						listaAssenti.add(cognomeAssente);
+						System.out.println("\tAssenti: "+listaAssenti.size());
+					}						
+					else 
+						System.out.println("\tCognome non trovato!");
+				
+			} while (!cognomeAssente.isEmpty());
+		}
+			
+		if (listaAssenti.size()>0)
+		{
+			System.out.println("\n\nGli assenti di oggi sono:");
+			for (String assente : listaAssenti) // per ogni assente in listaAssenti
+				System.out.println(assente);
+		}
 		
-		System.out.println("Gli assenti di oggi sono:");
-		for(String assente:listaAssenti)	//per ogni assente in listaAssenti
-			System.out.println(assente);
 		
 		presenti=cognomi.length-listaAssenti.size();
-		System.out.println("Il numero di persone presenti è: "+presenti);
+		System.out.println("\nIl numero di persone presenti è: "+presenti);
 		
-		System.out.println("Quanti gruppi si devono formare?");
+		System.out.print("Quanti gruppi si devono formare? ");
 		numeroGruppi = Integer.parseInt(sc.nextLine());
 		
 		if (numeroGruppi>presenti)
@@ -92,12 +107,27 @@ public class Main {
 			
 		}
 			
-		System.out.println("Sono stati creati questi gruppi:");
+		System.out.println("\nSono stati creati questi gruppi:");
 		for(int i=0;i<elencoGruppi.size();i++)
 			System.out.println("Gruppo "+ (i+1)+ ": "+ elencoGruppi.get(i));
 		sc.close();
-		System.out.println("Ciao");
-		}	
+		salvaGruppi(elencoGruppi);
+		
+		}
+	
+		static void salvaGruppi(ArrayList <ArrayList <String>> elencoGruppi) {
+			String fileName="Gruppi"+LocalDate.now()+".txt";
+			try {
+				FileWriter myWriter = new FileWriter(fileName);
+				for(int i=0;i<elencoGruppi.size();i++)
+					myWriter.write("Gruppo "+ (i+1)+ ": "+ elencoGruppi.get(i)+"\n");				
+				myWriter.close();
+				System.out.println("Gruppi salvati in "+fileName);
+			} catch (IOException e) {
+				System.out.println("An error occurred.");
+				e.printStackTrace();
+			}
+		}
 		
 	}
 
